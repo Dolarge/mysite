@@ -3,6 +3,7 @@ package com.bit2020.mysite.repository;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.bit2020.mysite.vo.UserVo;
@@ -53,6 +54,61 @@ public class UserRepository {
 		return result;
 	}	
 	
+	public UserVo findByEmailAndPassword(String email, String password) {
+		UserVo result = null;
+		Connection connection = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			// 1. 연결하기
+			connection = getConnection();
+
+			// 2. SQL 준비
+			String sql = 
+				"select no, name" +
+				"  from user" + 
+				" where email=?" + 
+				"   and password=password(?)";  
+			pstmt = connection.prepareStatement(sql);
+			
+			// 3. 바인딩(binding)
+			pstmt.setString(1, email);
+			pstmt.setString(2, password);
+			
+			// 4. sql 실행	
+			rs = pstmt.executeQuery();
+			
+			// 5. 결과 가져오기
+			if(rs.next()) {
+				Long no = rs.getLong(1);
+				String name = rs.getString(2);
+				
+				result = new UserVo();
+				result.setNo(no);
+				result.setName(name);
+			}
+		} catch (SQLException e) {
+			System.out.println("에러:" + e);
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
 	private Connection getConnection() throws SQLException {
 		Connection connection = null;
 		try {
@@ -68,12 +124,5 @@ public class UserRepository {
 		}
 		
 		return connection;
-	}
-
-	public UserVo findByEmailAndPassword(String email, String password) {
-		UserVo result = null;
-		
-		
-		return result;
 	}
 }

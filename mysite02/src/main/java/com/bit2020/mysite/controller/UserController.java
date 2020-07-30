@@ -46,11 +46,13 @@ public class UserController extends HttpServlet {
 	
 			UserVo userVo = new UserRepository().findByEmailAndPassword(email, password);
 			if(userVo == null) {
-				
+				request.setAttribute("result", "fail");
+				MVCUtil.forward("user/loginform", request, response);
+				return;
 			}
 			
-			
-//			System.out.println(email + ":" + password);
+			/* 인증 처리 */
+			System.out.println("인증 처리:" + userVo);
 		} else {
 			MVCUtil.redirect(request.getContextPath(), request, response);
 		}
