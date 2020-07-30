@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.bit2020.mvc.util.MVCUtil;
 import com.bit2020.mysite.repository.UserRepository;
@@ -52,7 +53,21 @@ public class UserController extends HttpServlet {
 			}
 			
 			/* 인증 처리 */
-			System.out.println("인증 처리:" + userVo);
+			HttpSession session = request.getSession(true);
+			session.setAttribute("authUser", userVo);
+			
+			MVCUtil.redirect(request.getContextPath(), request, response);
+		} else if("logout".equals(action)) {
+			HttpSession session = request.getSession();
+			
+			if(session != null && session.getAttribute("authUser") != null) {
+				/* 로그아웃 처리 */
+				session.removeAttribute("authUser");
+				session.invalidate();
+			}
+
+			MVCUtil.redirect(request.getContextPath(), request, response);
+			
 		} else {
 			MVCUtil.redirect(request.getContextPath(), request, response);
 		}
