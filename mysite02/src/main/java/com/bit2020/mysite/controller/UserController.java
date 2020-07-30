@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bit2020.mvc.util.MVCUtil;
+
 public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -17,12 +19,15 @@ public class UserController extends HttpServlet {
 		String action = request.getParameter("a");
 
 		if("joinform".equals(action)) {
-			//MVCUtil.forward("user/joinform", request, response);
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/user/joinform.jsp");
-			rd.forward(request, response);
-
+			MVCUtil.forward("user/joinform", request, response);
+		} else if("join".equals(action)) {
+			// ..
+			// ..
+			MVCUtil.redirect("/mysite02/user?a=joinsuccess", request, response);
+		} else if("joinsuccess".equals(action)) {
+			MVCUtil.forward("user/joinsuccess", request, response);
 		} else {
-			response.sendRedirect(request.getContextPath());
+			MVCUtil.redirect(request.getContextPath(), request, response);
 		}
 	}
 
