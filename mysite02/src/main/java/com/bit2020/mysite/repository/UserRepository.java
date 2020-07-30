@@ -9,7 +9,7 @@ import com.bit2020.mysite.vo.UserVo;
 
 public class UserRepository {
 	
-	public boolean insert(UserVo vo) {
+	public boolean save(UserVo vo) {
 		boolean result = false;
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -68,5 +68,12 @@ public class UserRepository {
 		}
 		
 		return connection;
+	}
+
+	public UserVo findByEmailAndPassword(String email, String password) {
+		UserVo result = null;
+		
+		
+		return result;
 	}
 }
